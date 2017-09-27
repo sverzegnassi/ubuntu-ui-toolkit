@@ -87,62 +87,34 @@ Item {
     FocusShape {
     }
 
-    Image {
-        id: strokeBorder
-        anchors.fill: parent
-        anchors.margins: -units.gu(0.5)
-        // FIXME: this PNG is way too big (462x108) and do not scale properly
-        // ie. the corners are visually incorrect at most sizes
-        source: stroke ? Qt.resolvedUrl("../artwork/stroke_button.png") : ""
-        visible: false
-        cache: false
-        asynchronous: true
-    }
-
-    ShaderEffect {
-        id: colorizedImage
-
-        anchors.fill: parent
-        visible: stroke && strokeBorder.status == Image.Ready
-
-        property Item source: visible ? strokeBorder : null
-        property color keyColorOut: stroke ? button.strokeColor : Qt.rgba(0.0, 0.0, 0.0, 0.0)
-        property color keyColorIn: Qt.rgba(1.0, 1.0, 1.0, 1.0)
-        property real threshold: 1.0
-
-        fragmentShader: "
-            varying highp vec2 qt_TexCoord0;
-            uniform sampler2D source;
-            uniform highp vec4 keyColorOut;
-            uniform highp vec4 keyColorIn;
-            uniform lowp float threshold;
-            uniform lowp float qt_Opacity;
-            void main() {
-                lowp vec4 sourceColor = texture2D(source, qt_TexCoord0);
-                gl_FragColor = mix(vec4(keyColorOut.rgb, 1.0) * sourceColor.a, sourceColor, step(threshold, distance(sourceColor.rgb / sourceColor.a, keyColorIn.rgb))) * qt_Opacity;
-            }"
-    }
-
-    UbuntuShape {
+    Rectangle {
         id: background
         anchors.fill: parent
-        borderSource: "radius_idle.sci"  // Deprecated, use a dedicated shape.
-        visible: stroke ? false : ((backgroundColor.a != 0.0) || backgroundSource)
-        source: backgroundSource
+        radius: units.dp(4)
 
-        backgroundColor: backgroundSource ? "#00000000" : (isGradient ? __colorHack(gradientProxy.topColor) : __colorHack(button.color))
-        secondaryBackgroundColor: backgroundSource ? "#00000000" : (isGradient ? __colorHack(gradientProxy.bottomColor) : __colorHack(button.color))
-        backgroundMode: isGradient ? UbuntuShape.VerticalGradient : UbuntuShape.SolidColor
+        color: !stroke ? __colorHack(button.color) : "transparent"
         opacity: styledItem.enabled ? 1.0 : 0.6
+
+        border.width: stroke ? units.dp(1) : 0
+        border.color: button.strokeColor
+
+        Rectangle {
+            width: background.width
+            height: background.height
+            radius: background.radius
+            y: units.dp(1)
+            z: -1000
+            color: "#CDCDCD"
+            opacity: 0.5
+            visible: !stroke
+        }
     }
 
-    UbuntuShape {
+    Rectangle {
         id: backgroundPressed
         anchors.fill: parent
-        backgroundColor: stroke ? button.strokeColor : background.backgroundColor
-        secondaryBackgroundColor: background.secondaryBackgroundColor
-        backgroundMode: stroke ? UbuntuShape.SolidColor : UbuntuShape.VerticalGradient
-        borderSource: "radius_pressed.sci"  // Deprecated, use a dedicated shape.
+	radius: background.radius
+        color: stroke ? button.strokeColor : Qt.darker(background.color)
         opacity: button.pressed ? 1.0 : 0.0
         Behavior on opacity {
             NumberAnimation {
