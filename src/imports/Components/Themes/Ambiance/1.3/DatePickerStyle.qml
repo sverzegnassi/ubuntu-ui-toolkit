@@ -60,6 +60,7 @@ Item {
     // frame
     UbuntuShape {
         anchors.fill: parent
+        aspect: UbuntuShape.Flat
         radius: "medium"
         source: shapeSource
     }

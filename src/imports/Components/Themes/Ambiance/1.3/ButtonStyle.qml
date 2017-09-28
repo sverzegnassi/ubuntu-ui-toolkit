@@ -126,7 +126,8 @@ Item {
     UbuntuShape {
         id: background
         anchors.fill: parent
-        borderSource: "radius_idle.sci"  // Deprecated, use a dedicated shape.
+        aspect: UbuntuShape.DropShadow
+        radius: "small"
         visible: stroke ? false : ((backgroundColor.a != 0.0) || backgroundSource)
         source: backgroundSource
 
@@ -142,7 +143,8 @@ Item {
         backgroundColor: stroke ? button.strokeColor : background.backgroundColor
         secondaryBackgroundColor: background.secondaryBackgroundColor
         backgroundMode: stroke ? UbuntuShape.SolidColor : UbuntuShape.VerticalGradient
-        borderSource: "radius_pressed.sci"  // Deprecated, use a dedicated shape.
+        aspect: UbuntuShape.Inset
+        radius: "small"
         opacity: button.pressed ? 1.0 : 0.0
         Behavior on opacity {
             NumberAnimation {

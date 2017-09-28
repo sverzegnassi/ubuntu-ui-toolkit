@@ -77,7 +77,8 @@ Style.ComboButtonStyle {
         UbuntuShape {
             id: background
             anchors.fill: parent
-            borderSource: "radius_idle.sci"  // Deprecated, use a dedicated shape.
+            aspect: UbuntuShape.DropShadow
+            radius: "small"
             visible: mainButton.stroke ? false : ((backgroundColor.a != 0.0) || mainButton.backgroundSource)
             source: mainButton.backgroundSource
 
@@ -280,6 +281,7 @@ Style.ComboButtonStyle {
                 topMargin: comboListMargin
             }
             source: listContent
+            aspect: UbuntuShape.DropShadow
         }
 
         Behavior on height {
