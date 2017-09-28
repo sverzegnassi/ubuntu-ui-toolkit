@@ -32,6 +32,7 @@ Item {
 
         width: styledItem.width
         height: styledItem.height
+        aspect: UbuntuShape.DropShadow
         radius: "medium"
         source: shapeSource
     }
